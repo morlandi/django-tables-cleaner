@@ -10,7 +10,7 @@ Quick start
 
 1. Installation::
 
-  pip install git+https://github.com/morlandi/django-tables-cleaner
+    pip install git+https://github.com/morlandi/django-tables-cleaner
 
 2. Add "tables_cleaner" to your INSTALLED_APPS setting like this::
 
