@@ -1,5 +1,7 @@
 import os
+import re
 from setuptools import find_packages, setup
+
 
 def get_version(*file_paths):
     """Retrieves the version from django_task/__init__.py"""
@@ -10,7 +12,7 @@ def get_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError('Unable to find version string.')
 
-version = get_version("sitesync", "__init__.py")
+version = get_version("tables_cleaner", "__init__.py")
 readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
