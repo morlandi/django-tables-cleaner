@@ -8,14 +8,18 @@ oldest records from specific db tables.
 Quick start
 -----------
 
-1. Add "tables_cleaner" to your INSTALLED_APPS setting like this::
+1. Installation::
+
+  pip install git+https://github.com/morlandi/django-tables-cleaner
+
+2. Add "tables_cleaner" to your INSTALLED_APPS setting like this::
 
     INSTALLED_APPS = [
         ...
         'tables_cleaner',
     ]
 
-2. Run the management command periodically (i.e. with cron) ::
+3. Run the management command periodically (i.e. with cron) ::
 
     python manage.py clean_tables
 
