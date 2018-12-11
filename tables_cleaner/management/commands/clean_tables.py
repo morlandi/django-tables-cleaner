@@ -123,7 +123,8 @@ class Command(BaseCommand):
         model = apps.get_model(table['model'])
 
         # Retrieve get_latest_by for model
-        get_latest_by = getattr(model._meta, 'get_latest_by', None)
+        get_latest_by = table.get('get_latest_by', getattr(model._meta, 'get_latest_by', None))
+        #get_latest_by = getattr(model._meta, 'get_latest_by', None)
         if get_latest_by is None:
             raise Exception('"%s": missing required attribute "get_latest_by"' % table['model'])
         if get_latest_by.startswith('-'):

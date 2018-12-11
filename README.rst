@@ -78,5 +78,10 @@ Example::
             'keep_records': 100,
             'keep_since_days': 0,
             'keep_since_hours': 12,
+            'get_latest_by': 'created',
         },
     ]
+
+
+**get_latest_by** attribute is optional; if not supplied, Model's Meta get_latest_by
+is used instead.
