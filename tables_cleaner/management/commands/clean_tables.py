@@ -64,7 +64,7 @@ class Command(BaseCommand):
         self.dry_run = options['dry_run']
         self.vacuum = options['vacuum']
 
-        self.logger.info("clean_tables started.")
+        self.logger.info("***** clean_tables started. *****")
 
         # Be transactional !
         with transaction.atomic(using=self.using):
@@ -100,7 +100,7 @@ class Command(BaseCommand):
             cursor.execute("VACUUM FULL")
             connection.connection.set_isolation_level(old_isolation_level)
 
-        self.logger.info("clean_tables done.")
+        self.logger.info("*** clean_tables done.")
 
     def clean_table(self, table):
 
