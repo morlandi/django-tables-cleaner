@@ -3,6 +3,11 @@
 History
 =======
 
+v0.0.4
+------
+* Customizable 'get_latest_by' attribute
+* Remove EmptyResultSet import which is not available in older versions of Django
+
 v0.0.3
 ------
 * Setup fix
