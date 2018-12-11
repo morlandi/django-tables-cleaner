@@ -10,7 +10,7 @@ from django.db import DEFAULT_DB_ALIAS
 from datetime import datetime, timedelta
 from datetime import timedelta
 from django.utils import timezone
-from django.core.exceptions import EmptyResultSet
+#from django.core.exceptions import EmptyResultSet
 
 from tables_cleaner.app_settings import TABLES
 
@@ -155,8 +155,9 @@ class Command(BaseCommand):
 
         try:
             self.logger.debug('sql: ' + str(queryset.query))
-        except EmptyResultSet:
-            self.logger.debug("sql: EmptyResultSet")
+        #except EmptyResultSet:
+        except Exception as e:
+            self.logger.debug("sql: %s" % str(e))
 
         self.logger.debug('"%s": records to keep: %d' % (table['model'], table_size - queryset.count()))
         self.logger.debug('"%s": records to be removed: %d' % (table['model'], queryset.count()))
