@@ -3,6 +3,10 @@
 History
 =======
 
+v0.0.5
+------
+* Fix for Django 2.x: call super() from Command.__init__() as required
+
 v0.0.4
 ------
 * Customizable 'get_latest_by' attribute

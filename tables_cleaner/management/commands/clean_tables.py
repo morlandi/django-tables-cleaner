@@ -26,7 +26,8 @@ def signal_handler(signal, frame):
 
 class Command(BaseCommand):
 
-    def __init__(self, logger=None):
+    def __init__(self, logger=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.logger = logger or logging.getLogger(__name__)
         signal.signal(signal.SIGINT, signal_handler)
 
