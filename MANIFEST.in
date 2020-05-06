@@ -1,5 +1,5 @@
 include LICENSE
-include README.rst
+include README.rst HISTORY.rst
 recursive-include tables_cleaner/static *
 recursive-include tables_cleaner/templates *
 recursive-include tables_cleaner/management *
