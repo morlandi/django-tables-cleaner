@@ -1,13 +1,11 @@
 import logging
 import sys
 import signal
-import datetime
 import traceback
 from django.apps import apps
 from django.db import transaction
 from django.db import connections
 from django.db import DEFAULT_DB_ALIAS
-from datetime import datetime, timedelta
 from datetime import timedelta
 from django.utils import timezone
 #from django.core.exceptions import EmptyResultSet
