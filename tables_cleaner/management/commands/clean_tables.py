@@ -126,6 +126,8 @@ class Command(BaseCommand):
             try:
                 last = queryset.last()
             except TypeError as e:
+                self.logger.info(str(e))
+                self.logger.debug(traceback.format_exc())
                 # TypeError('Cannot reverse a query once a slice has been taken.')
                 n = len(queryset)
                 last = queryset[n - 1] if n > 0 else None
