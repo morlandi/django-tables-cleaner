@@ -1,13 +1,11 @@
 import logging
 import sys
 import signal
-import datetime
 import traceback
 from django.apps import apps
 from django.db import transaction
 from django.db import connections
 from django.db import DEFAULT_DB_ALIAS
-from datetime import datetime, timedelta
 from datetime import timedelta
 from django.utils import timezone
 #from django.core.exceptions import EmptyResultSet
@@ -65,7 +63,7 @@ class Command(BaseCommand):
         self.dry_run = options['dry_run']
         self.vacuum = options['vacuum']
 
-        self.logger.info("***** clean_tables started. *****")
+        self.logger.info("***** clean_tables started on db %s. *****" % self.using)
 
         # Be transactional !
         with transaction.atomic(using=self.using):
@@ -89,10 +87,27 @@ class Command(BaseCommand):
             if transaction.get_autocommit(self.using):
                 connections[self.using].close()
 
-        if not self.dry_run and self.vacuum:
+        if self.vacuum:
+            self.vacuum_db(connections[self.using])
 
-            self.logger.info('Executing VACUUM FULL (untested !!!)')
-            connection = connections[self.using]
+        self.logger.info("*** clean_tables done.")
+
+    def vacuum_db(self, connection):
+        engine_module = connection.__class__.__module__
+        if 'sqlite' in engine_module or 'spatialite' in engine_module:
+            self.logger.info('Executing Sqlite3 VACUUM')
+
+            if self.dry_run:
+                return
+
+            cursor = connection.cursor()
+            cursor.execute('VACUUM')
+            cursor.close()
+        elif 'postgresql' in engine_module or 'postgis' in engine_module:
+            self.logger.info('Executing PosgreSQL VACUUM FULL (untested !!!)')
+
+            if self.dry_run:
+                return
 
             # https://stackoverflow.com/questions/1017463/postgresql-how-to-run-vacuum-from-code-outside-transaction-block#1017655
             old_isolation_level = connection.connection.isolation_level
@@ -101,7 +116,8 @@ class Command(BaseCommand):
             cursor.execute("VACUUM FULL")
             connection.connection.set_isolation_level(old_isolation_level)
 
-        self.logger.info("*** clean_tables done.")
+        else:
+            self.logger.warn('--vacuum not supported on %s' % engine_module)
 
     def clean_table(self, table):
 
@@ -110,6 +126,8 @@ class Command(BaseCommand):
             try:
                 last = queryset.last()
             except TypeError as e:
+                self.logger.info(str(e))
+                self.logger.debug(traceback.format_exc())
                 # TypeError('Cannot reverse a query once a slice has been taken.')
                 n = len(queryset)
                 last = queryset[n - 1] if n > 0 else None
