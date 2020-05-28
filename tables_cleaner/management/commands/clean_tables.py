@@ -34,8 +34,8 @@ class Command(BaseCommand):
             '--database', action='store', dest='database', default=DEFAULT_DB_ALIAS,
             help='Nominates a specific database to load fixtures into. Defaults to the "default" database.',
         )
-        parser.add_argument('-n', '--dry-run', action='store_true', default=False, help="Don't actually delete records (default: False)")
-        parser.add_argument('--vacuum', action='store_true', default=False, help="Run VACUUM FULL after deletion (Postgresql only)")
+        parser.add_argument('-d', '--dry-run', action='store_true', default=False, help="Don't actually delete records (default: False)")
+        parser.add_argument('--vacuum', action='store_true', default=False, help="Run VACUUM after deletion")
 
     def set_logger(self, verbosity):
         """
