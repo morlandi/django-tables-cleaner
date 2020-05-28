@@ -31,7 +31,7 @@ Usage
 
 ::
 
-    usage: manage.py clean_tables [-h] [--database DATABASE] [-n] [--vacuum]
+    usage: manage.py clean_tables [-h] [--database DATABASE] [-d] [--vacuum]
                                   [--version] [-v {0,1,2,3}] [--settings SETTINGS]
                                   [--pythonpath PYTHONPATH] [--traceback]
                                   [--no-color]
@@ -40,8 +40,8 @@ Usage
       -h, --help            show this help message and exit
       --database DATABASE   Nominates a specific database to load fixtures into.
                             Defaults to the "default" database.
-      -n, --dry-run         Don't actually delete records (default: False)
-      --vacuum              Run VACUUM FULL after deletion (Postgresql only)
+      -d, --dry-run         Don't actually delete records (default: False)
+      --vacuum              Run VACUUM after deletion
       --version             show program's version number and exit
       -v {0,1,2,3}, --verbosity {0,1,2,3}
                             Verbosity level; 0=minimal output, 1=normal output,
