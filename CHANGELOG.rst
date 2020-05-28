@@ -3,6 +3,10 @@
 History
 =======
 
+v0.1.2
+------
+* apply vacuum only when supported by db engines
+
 v0.1.1
 ------
 * published on PyPI

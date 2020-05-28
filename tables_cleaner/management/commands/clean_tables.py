@@ -87,18 +87,34 @@ class Command(BaseCommand):
             if transaction.get_autocommit(self.using):
                 connections[self.using].close()
 
-        if self.vacuum:
+        if self.vacuum and not self.dry_run:
             self.vacuum_db(connections[self.using])
 
         self.logger.info("*** clean_tables done.")
 
+    def vacuum_supported(self, connection):
+        supported_engines = [
+            'postgresql',
+            'postgis',
+            'sqlite',
+            'spatialite',
+        ]
+        engine_module = connection.__class__.__module__
+        for engine in supported_engines:
+            if engine in engine_module:
+                return True
+        self.logger.warn('Vacuum not supported on %s' % engine_module)
+        return False
+
     def vacuum_db(self, connection):
-        self.logger.info('%sExecuting VACUUM' % ('DRY-RUN: ' if self.dry_run else ''))
-        if self.dry_run:
-            return
+        if not self.vacuum_supported(connection):
+            self.logger.warn('VACUUM skipped')
+            return False
+        self.logger.info('Executing VACUUM')
         cursor = connection.cursor()
         cursor.execute('VACUUM')
         cursor.close()
+        return True
 
     def clean_table(self, table):
 
