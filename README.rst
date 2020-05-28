@@ -2,13 +2,16 @@
 django-tables-cleaner
 =====================
 
-`tables_cleaner` is a Django app which can remove (and optionally archive)
-oldest records from specific db tables.
+`tables_cleaner` is a Django app used to remove oldest records from specific db tables
 
 Quick start
 -----------
 
 1. Installation::
+
+    pip install django-tables-cleaner
+
+    or
 
     pip install git+https://github.com/morlandi/django-tables-cleaner
 
@@ -85,3 +88,37 @@ Example::
 
 **get_latest_by** attribute is optional; if not supplied, Model's Meta get_latest_by
 is used instead.
+
+
+Vacuum strategy
+---------------
+
+"VACUUM" is optionally executed as a final activity ('--vacuum').
+
+Since version v0.1.0, we opted to use "VACUUM" instead of "VACUUM FULL", since that
+seems more appropriate for ordinary database maintenance, for the following reasons:
+
+- it's available for Postgresql and Sqlite (and, hopefully, for other databases too)
+- database owners are allowed to vacuum all tables in their databases
+- an exclusive lock is not required
+- it's potentially much faster
+
+PostgreSQL documentation explicitly states that `The FULL option is not recommended for routine use`;
+see: `VACUUM — garbage-collect and optionally analyze a database <https://www.postgresql.org/docs/11/sql-vacuum.html>`_
+
+Thanks to John Vandenberg for bringing my attention to this.
+
+
+FileFields and ImageFields
+--------------------------
+
+Removing rows in the database when the Model contains one or more FileField or
+ImageField is not enough, since some garbage is left in the Media folder.
+
+I normally use `django-cleanup <https://pypi.org/project/django-cleanup/>`_ to cope with this.
+
+
+License
+-------
+
+This code is distributed under the terms of the MIT license.

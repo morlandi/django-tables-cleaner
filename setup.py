@@ -14,7 +14,7 @@ def get_version(*file_paths):
 
 version = get_version("tables_cleaner", "__init__.py")
 readme = open('README.rst').read()
-history = open('HISTORY.rst').read().replace('.. :changelog:', '')
+history = open('CHANGELOG.rst').read().replace('.. :changelog:', '')
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
@@ -24,23 +24,18 @@ setup(
     version=version,
     packages=find_packages(),
     include_package_data=True,
-    license='BSD License',  # example license
-    description='A Django app which can remove (and optionally archive) oldest records from specific db tables.',
+    license='MIT',
+    description='A Django app used to remove oldest records from specific db tables.',
     long_description=readme + '\n\n' + history,
     url='https://brainstorm.it/',
     author='Mario Orlandi',
     author_email='morlandi@brainstorm.it',
+    zip_safe=False,
     classifiers=[
-        'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 2.1',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
+        'License :: OSI Approvd :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Topic :: Internet :: WWW/HTTP',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
 )

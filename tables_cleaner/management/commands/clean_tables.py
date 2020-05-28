@@ -93,31 +93,12 @@ class Command(BaseCommand):
         self.logger.info("*** clean_tables done.")
 
     def vacuum_db(self, connection):
-        engine_module = connection.__class__.__module__
-        if 'sqlite' in engine_module or 'spatialite' in engine_module:
-            self.logger.info('Executing Sqlite3 VACUUM')
-
-            if self.dry_run:
-                return
-
-            cursor = connection.cursor()
-            cursor.execute('VACUUM')
-            cursor.close()
-        elif 'postgresql' in engine_module or 'postgis' in engine_module:
-            self.logger.info('Executing PosgreSQL VACUUM FULL (untested !!!)')
-
-            if self.dry_run:
-                return
-
-            # https://stackoverflow.com/questions/1017463/postgresql-how-to-run-vacuum-from-code-outside-transaction-block#1017655
-            old_isolation_level = connection.connection.isolation_level
-            connection.connection.set_isolation_level(0)
-            cursor = connection.cursor()
-            cursor.execute("VACUUM FULL")
-            connection.connection.set_isolation_level(old_isolation_level)
-
-        else:
-            self.logger.warn('--vacuum not supported on %s' % engine_module)
+        self.logger.info('%sExecuting VACUUM' % ('DRY-RUN: ' if self.dry_run else ''))
+        if self.dry_run:
+            return
+        cursor = connection.cursor()
+        cursor.execute('VACUUM')
+        cursor.close()
 
     def clean_table(self, table):
 

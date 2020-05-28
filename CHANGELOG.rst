@@ -3,6 +3,12 @@
 History
 =======
 
+v0.1.0
+------
+* published on PyPI
+* use "VACUUM" instead of "VACUUM FULL"
+* dry run option renamed as "-d" (was "-n")
+
 v0.0.5
 ------
 * Fix for Django 2.x: call super() from Command.__init__() as required
