@@ -3,6 +3,10 @@
 History
 =======
 
+v0.1.3
+------
+* Python and Django classifiers added to setup.py
+
 v0.1.2
 ------
 * apply vacuum only when supported by db engines
