@@ -3,9 +3,13 @@
 History
 =======
 
-v0.1.0
+v0.1.1
 ------
 * published on PyPI
+
+v0.1.0
+------
+* prepare for publishing on PyPI
 * use "VACUUM" instead of "VACUUM FULL"
 * dry run option renamed as "-d" (was "-n")
 
