@@ -34,6 +34,10 @@ class Command(BaseCommand):
             '--database', action='store', dest='database', default=DEFAULT_DB_ALIAS,
             help='Nominates a specific database to load fixtures into. Defaults to the "default" database.',
         )
+        parser.add_argument('--model', action='store', dest='model', help="Process one app.model")
+        parser.add_argument('--keep-record-count', action='store', dest='record_count', help="Keep specified number of records (default: use settings)")
+        parser.add_argument('--keep-since-days', action='store', dest='days', help="Keep records updated since specified days (default: use settings)")
+        parser.add_argument('--keep-since-hours', action='store', dest='hours', help="Keep records updated since specified hours (default: use settings)")
         parser.add_argument('-d', '--dry-run', action='store_true', default=False, help="Don't actually delete records (default: False)")
         parser.add_argument('--vacuum', action='store_true', default=False, help="Run VACUUM after deletion")
 
@@ -60,8 +64,15 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.set_logger(options.get('verbosity'))
         self.using = options['database']
+        self.model = options['model']
+        self.record_count = options['record_count']
+        self.days = options['days']
+        self.hours = options['hours']
         self.dry_run = options['dry_run']
         self.vacuum = options['vacuum']
+
+        if not TABLES and self.model:
+            TABLES.append({'model': self.model})
 
         self.logger.info("***** clean_tables started on db %s. *****" % self.using)
 
@@ -69,6 +80,18 @@ class Command(BaseCommand):
         with transaction.atomic(using=self.using):
 
             for table in TABLES:
+                if self.model and self.model != table['model']:
+                    continue
+
+                if self.record_count:
+                    table['keep_records'] = int(self.record_count)
+                if self.days:
+                    table['keep_since_days'] = int(self.days)
+                if self.hours:
+                    table['keep_since_hours'] = int(self.hours)
+
+                print(table)
+
                 try:
                     self.logger.info('Cleaning table "%s"' % table['model'])
                     n = self.clean_table(table)
