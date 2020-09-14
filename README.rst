@@ -2,7 +2,11 @@
 django-tables-cleaner
 =====================
 
-`tables_cleaner` is a Django app used to remove oldest records from specific db tables
+`tables_cleaner` is a Django app used to remove oldest records from specific db tables.
+
+It is intended to be used in production to keep under control the size of growing
+tables containing temporary data (used for logging, auditing, ...), but preserving
+the most recent records according to the constraints assigned by design (see `TABLES_CLEANER_TABLES` setting).
 
 Quick start
 -----------
@@ -28,6 +32,8 @@ Quick start
 
 Usage
 -----
+
+The first option is to **recall periodically the management command** `clean_tables`, for example via cron:
 
 ::
 
@@ -56,6 +62,31 @@ Usage
       --traceback           Raise on CommandError exceptions
       --no-color            Don't colorize the command output.
 
+
+Or, when using a different scheduling strategy (for example with `django-cron <https://pypi.org/project/django-cron/>`_)
+**you can call from Python code the following function**:
+
+.. code :: python
+
+    clean_tables(logger=None, dry_run=False)
+
+For example:
+
+.. code:: python
+
+    import tables_cleaner
+    tables_cleaner.clean_tables()
+
+
+Finally, for very specific needs, you can **recall the real workhorse directly**:
+
+.. code:: python
+
+  def clean_table(model_name, keep_records, keep_since_days, keep_since_hours, get_latest_by=None, logger=None, dry_run=False)
+
+which act on a single table, and doesn't require any setting.
+
+
 Settings
 --------
 
@@ -72,12 +103,12 @@ Example::
 
     TABLES_CLEANER_TABLES = [
         {
-            'model': 'backend.log',
+            'model_name': 'backend.log',
             'keep_records': 1000,
             'keep_since_days': 1,
             'keep_since_hours': 0,
         }, {
-            'model': 'tasks.updatedevicetask',
+            'model_name': 'tasks.updatedevicetask',
             'keep_records': 100,
             'keep_since_days': 0,
             'keep_since_hours': 12,
@@ -116,6 +147,33 @@ Removing rows in the database when the Model contains one or more FileField or
 ImageField is not enough, since some garbage is left in the Media folder.
 
 I normally use `django-cleanup <https://pypi.org/project/django-cleanup/>`_ to cope with this.
+
+
+Does it work?
+-------------
+
+A few unit tests have been provided.
+
+Prepare the virtual environment as follows::
+
+    python -m pip install -r requirements.txt
+
+then::
+
+    ./runtests.py
+
+or::
+
+    coverage run --source='.' runtests.py
+    coverage report
+
+
+References
+----------
+
+- `Using the Django test runner to test reusable applications <https://docs.djangoproject.com/en/3.1/topics/testing/advanced/#using-the-django-test-runner-to-test-reusable-applications>`_
+- `Advanced tutorial: How to write reusable apps <https://docs.djangoproject.com/en/3.1/intro/reusable-apps/>`_
+- `TODO: Running tests using tox <https://docs.djangoproject.com/en/3.1/internals/contributing/writing-code/unit-tests/#running-tests-using-tox>`_
 
 
 License

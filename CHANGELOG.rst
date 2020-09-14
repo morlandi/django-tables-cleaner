@@ -3,6 +3,12 @@
 History
 =======
 
+v0.1.4
+------
+* Example project added
+* Refactoring: app logic moved to standalone Python functions
+* Unit tests added
+
 v0.1.3
 ------
 * Python and Django classifiers added to setup.py
